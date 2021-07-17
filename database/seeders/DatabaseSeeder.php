@@ -35,12 +35,10 @@ class DatabaseSeeder extends Seeder
         $editTaskComment = Permission::findOrCreate ('editTaskComment');
         $deleteTaskComment = Permission::findOrCreate ('deleteTaskComment');
 
-        $adminRole = Role::findOrCreate (RoleName::ADMIN);
-       // $adminRole->roles()->detach();
+        $adminRole = Role::findOrCreate(RoleName::ADMIN);
         $adminRole->givePermissionTo(Permission::all());
 
         $userRole = Role::findOrCreate(RoleName::USER);
-       // $userRole->roles()->detach();
         $userRole->givePermissionTo($editProject);
         $userRole->givePermissionTo($editTask);
         $userRole->givePermissionTo($addTaskComment);

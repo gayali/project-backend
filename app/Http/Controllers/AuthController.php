@@ -28,6 +28,6 @@ class AuthController extends Controller
     }
     public function me()
     {
-        return Auth::user()->getAllPermissions();
+        return Auth::user();
     }
 }

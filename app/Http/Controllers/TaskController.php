@@ -83,7 +83,7 @@ class TaskController extends Controller
     public function edit(Task $task,TaskRequest $request)
     {
         try {
-            $task->update($request->getPayload());
+            $task->update($request->all());
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Edited'], 200);
         } catch (Exception $e) {
             return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);

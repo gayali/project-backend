@@ -20,6 +20,11 @@ class Task extends Model
         'description',
         'project_id'
     ];
+    protected $with = [
+        'reporterUser',
+        'asigneeUser',
+        'project'
+    ];
 
     public function project()
     {
@@ -31,10 +36,10 @@ class Task extends Model
     }
     public function reporterUser()
     {
-        return $this->hasOne(User::class, 'reporter_user_id', 'id');
+        return $this->belongsTo(User::class, 'reporter_user_id', 'id');
     }
     public function asigneeUser()
     {
-        return $this->hasOne(User::class, 'assignee_user_id', 'id');
+        return $this->belongsTo(User::class, 'assignee_user_id', 'id');
     }
 }
