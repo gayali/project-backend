@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Enums\Role as RoleName;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -17,40 +18,56 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        $addUser = Permission::findOrCreate('addUser');
-        $editUser = Permission::findOrCreate ('editUser');
-        $deleteUser = Permission::findOrCreate ('deleteUser');
-
-        $addProject = Permission::findOrCreate ('addProject');
-        $editProject = Permission::findOrCreate ('editProject');
-        $deleteProject = Permission::findOrCreate ('deleteProject');
-
-        $addTask = Permission::findOrCreate ('addTask');
-        $editTask = Permission::findOrCreate ('editTask');
-        $deleteTask = Permission::findOrCreate ('deleteTask');
-
-        $addTaskComment = Permission::findOrCreate ('addTaskComment');
-        $editTaskComment = Permission::findOrCreate ('editTaskComment');
-        $deleteTaskComment = Permission::findOrCreate ('deleteTaskComment');
-
-        $adminRole = Role::findOrCreate(RoleName::ADMIN);
-        $adminRole->givePermissionTo(Permission::all());
-
-        $userRole = Role::findOrCreate(RoleName::USER);
-        $userRole->givePermissionTo($editProject);
-        $userRole->givePermissionTo($editTask);
-        $userRole->givePermissionTo($addTaskComment);
-        $userRole->givePermissionTo($editTaskComment);
+        //app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        $this->createPermissions();
+        $this->createRoles();
+        $this->assignAdminRoleToUser();
+    }
 
 
+    public function createPermissions()
+    {
+        $resources = ['User', 'Project', 'Task', 'TaskComment'];
+        $functions = ['create', 'update', 'read', 'delete'];
+        $guards=['web'];
+        foreach ($guards as $guard){
+            foreach ($resources as $resource) {
+                foreach ($functions as $function) {
+                    Permission::create(['name' => $function . $resource,'guard_name'=>$guard]);
+                }
+            }
+        }
+    }
+
+    public function createRoles()
+    {
+     //   Role::create(['name' => RoleName::ADMIN,'guard_name'=>'web'])->givePermissionTo(Permission::all());
+        Role::create(['name' => RoleName::ADMIN,'guard_name'=>'web'])->givePermissionTo(Permission::all());
+      //  Role::create(['name' => RoleName::USER,'guard_name'=>'web'])->givePermissionTo($this->getUserPermissions());
+        Role::create(['name' => RoleName::USER,'guard_name'=>'web'])->givePermissionTo($this->getUserPermissions());
+    }
+
+
+    public function assignAdminRoleToUser()
+    {
         $admin=User::firstOrCreate([
             'name'=>'Gaurav Gayali',
             'email'=>'cg.36.central@gmail.com',
             'password'=>Hash::make('Welcome@54321'),
         ]);
-       // $userRole->roles()->detach();
-        $admin->assignRole($adminRole);
+        $admin->assignRole(RoleName::ADMIN);
+        
+    }
+
+    private function getUserPermissions()
+    {
+        return [
+            'readProject',
+            'readTask',
+            'updateTask',
+            'createTaskComment',
+            'readTaskComment',
+            'updateTaskComment',
+        ];
     }
 }

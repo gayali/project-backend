@@ -28,6 +28,7 @@ class AuthController extends Controller
     }
     public function me()
     {
-        return Auth::user();
+        $user=User::where('id',Auth::user()->id)->with('roles')->first();
+        return response()->json($user, 200);
     }
 }

@@ -9,19 +9,17 @@ use App\Http\Requests\User\UpdateUserRequest;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
     public function store(NewUserRequest $request)
     {
         try {
-
           $user=  User::create($request->all());
-             if($request->role()==Role::ADMIN){
-                $user->assignRole(Role::ADMIN);
-            }else{
-                $user->assignRole(Role::USER);
-            }
+           $user->assignRole($request->role);
+           
             return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'User Created'], 200);
         } catch (Exception $e) {
             return response()->json(['status' => ResponseStatus::ERROR, 'message' => $e->getMessage()], 500);
@@ -56,7 +54,13 @@ class UserController extends Controller
     public function edit(User $user, UpdateUserRequest $request)
     {
         try {
-            $user->update($request->getPayload());
+                    
+   
+                Log::info($request->all());
+            $user->update($request->all());
+
+            if($request->role!=='')$user->syncRoles($request->role);
+            
             return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'User Edited'], 200);
         } catch (Exception $e) {
             return response()->json(['status' => ResponseStatus::ERROR, 'message' => $e->getMessage()], 500);
@@ -74,7 +78,7 @@ class UserController extends Controller
     public function all(Request $request)
     {
         try {
-            $users = User::all();
+            $users =User::with('roles')->get();
             if ($users) {
                 return response()->json([
                     'status' => ResponseStatus::SUCCESS,

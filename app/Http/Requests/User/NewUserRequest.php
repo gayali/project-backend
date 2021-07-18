@@ -13,7 +13,7 @@ class NewUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,9 +25,10 @@ class NewUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'password' => 'required|string',
+            'password' => 'required|string|confirmed|min:6',
             'email' => 'required|unique:users|string',
-            'role'=>'required|string'
+            'role'=>'required|string',
+            'password_confirmation'=>'required|string',
         ];
     }
     public function messages()
@@ -37,6 +38,8 @@ class NewUserRequest extends FormRequest
             'password.required' => 'You need to specify a password',
             'password.string' => 'password must be a string',
             'email.required' => 'You need to specify a email',
+            'role.required' => 'You need to specify a role',
+            'password_confirmation.required' => 'You need to specify a confirm password',
         ];
     }
 }

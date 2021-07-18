@@ -13,7 +13,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,17 +25,18 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'password' => 'required|string',
-            'email' => 'required|unique:users|string'
+            'password' => 'string',
+            'email' => 'required|string',
+            'role'=>'string',
         ];
     }
     public function messages()
     {
         return [
             'name.required' => 'You need to specify a name',
-            'password.required' => 'You need to specify a password',
             'password.string' => 'password must be a string',
             'email.required' => 'You need to specify a email',
+            'role.string' => 'role must be a string'
         ];
     }
 }

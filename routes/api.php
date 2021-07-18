@@ -28,23 +28,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:'.Role::ADMIN]], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::post('', 'UserController@store');
-            Route::get('all', 'UserController@all');
+            
             Route::get('/{user}/show', 'UserController@user');
             Route::post('/{user}/edit', 'UserController@edit');
             Route::post('/{user}/destroy', 'UserController@destroy');
         });
         Route::group(['prefix' => 'projects'], function () {
             Route::post('', 'ProjectController@store');
-            Route::get('', 'ProjectController@projects');
-            Route::get('/{project}/show', 'ProjectController@project');
-            Route::post('/{project}/edit', 'ProjectController@edit');
+  
             Route::post('/{project}/destroy', 'ProjectController@destroy');
         });
         Route::group(['prefix' => 'tasks'], function () {
             Route::post('', 'TaskController@store');
-            Route::get('', 'TaskController@tasks');
-            Route::get('/{task}/show', 'TaskController@task');
-            Route::post('/{task}/edit', 'TaskController@edit');
+          
             Route::post('/{task}/destroy', 'TaskController@destroy');
         });
         Route::group(['prefix' => 'taskComments'], function () {
@@ -58,12 +54,17 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:'.Role::USER.'|'.Role::ADMIN]], function () {
 
         Route::group(['prefix' => 'users'], function () {
+            Route::get('all', 'UserController@all');
             Route::get('/{user}/show', 'UserController@user');
         });
         Route::group(['prefix' => 'projects'], function () {
+            Route::get('', 'ProjectController@projects');
+            Route::get('/{project}/show', 'ProjectController@project');          
             Route::get('/{project}/show', 'ProjectController@project');
+            Route::post('/{project}/edit', 'ProjectController@edit');
         });
         Route::group(['prefix' => 'tasks'], function () {
+            Route::get('', 'TaskController@tasks');
             Route::get('/{task}/show', 'TaskController@task');
             Route::post('/{task}/edit', 'TaskController@edit');
         });
