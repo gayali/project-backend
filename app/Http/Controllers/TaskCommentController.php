@@ -15,7 +15,7 @@ class TaskCommentController extends Controller
     public function store(TaskCommentRequest $request)
     {
         try {
-            TaskComment::create($request->getPayload());
+            TaskComment::create($request->all());
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Created'], 200);
         } catch (Exception $e) {
             return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
@@ -42,6 +42,31 @@ class TaskCommentController extends Controller
             return response()->json([
                 'status'=>ResponseStatus::ERROR,
                 'taskComment'=>null,
+                'message'=>  $e->getMessage()
+            ], 500);
+        }
+    }
+    public function fetchAll(Request $request)
+    {
+        try {
+            $taskComments = TaskComment::where("task_id",$request->task_id)->get();
+            if ($taskComments) {
+                return response()->json([
+                    'status' => ResponseStatus::SUCCESS,
+                    'taskComments' => $taskComments,
+                    'message' => 'Task Comment Found',
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => ResponseStatus::SUCCESS,
+                    'taskComments' => null,
+                    'message' => 'Task Comments Not Found',
+                ], 200);
+            }
+        } catch (Exception $e) {
+            return response()->json([
+                'status'=>ResponseStatus::ERROR,
+                'taskComments'=>null,
                 'message'=>  $e->getMessage()
             ], 500);
         }

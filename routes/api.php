@@ -44,9 +44,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/{task}/destroy', 'TaskController@destroy');
         });
         Route::group(['prefix' => 'taskComments'], function () {
-            Route::post('', 'TaskComment@store');
-            Route::get('/{taskComment}/show', 'TaskComment@taskComment');
-            Route::post('/{taskComment}/edit', 'TaskComment@edit');
             Route::post('/{taskComment}/destroy', 'TaskComment@destroy');
         });
     });
@@ -69,9 +66,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/{task}/edit', 'TaskController@edit');
         });
         Route::group(['prefix' => 'taskComments'], function () {
-            Route::post('', 'TaskComment@store');
-            Route::get('/{taskComment}/show', 'TaskComment@taskComment');
-            Route::post('/{taskComment}/edit', 'TaskComment@edit');
+            Route::post('all', 'TaskCommentController@fetchAll');
+            Route::post('', 'TaskCommentController@store');
+            Route::get('/{taskComment}/show', 'TaskCommentController@taskComment');
+            Route::post('/{taskComment}/edit', 'TaskCommentController@edit');
         });
     });
 });

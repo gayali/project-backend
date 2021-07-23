@@ -13,4 +13,5 @@ class TaskStatus
     const STAGING = 'Staging';
     const ARCHIVE = 'Archive';
     const PRODUCTION = 'Production';
+    const FINISHED = 'Finished';
 }

@@ -14,10 +14,19 @@ class TaskComment extends Model
         'commented_by_user_id',
         'task_id',
     ];
+    protected $with = [
+        'user',
+        'task'
+    ];
 
     public function task()
     {
         return $this->belongsTo(Task::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'commented_by_user_id','id');
     }
 
 }

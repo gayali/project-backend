@@ -15,8 +15,8 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->string('task_tittle');
-            $table->enum('status',['Backlog','To do','Doing','Ready for review','Dev','Test','Staging','Archive','Production'])->default('Backlog');
+            $table->string('task_title');
+            $table->enum('status',['Backlog','To do','Doing','Ready for review','Dev','Test','Staging','Archive','Production','Finished'])->default('Backlog');
             $table->string('branch_name');
             $table->unsignedBigInteger('reporter_user_id');
             $table->foreign("reporter_user_id")->references('id')->on('users');
