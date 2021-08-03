@@ -56,7 +56,6 @@ class UserController extends Controller
         try {
                     
    
-                Log::info($request->all());
             $user->update($request->all());
 
             if($request->role!=='')$user->syncRoles($request->role);

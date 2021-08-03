@@ -35,7 +35,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         });
         Route::group(['prefix' => 'projects'], function () {
             Route::post('', 'ProjectController@store');
-  
+            Route::post('/{project}/edit', 'ProjectController@edit');
             Route::post('/{project}/destroy', 'ProjectController@destroy');
         });
         Route::group(['prefix' => 'tasks'], function () {
@@ -56,9 +56,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         });
         Route::group(['prefix' => 'projects'], function () {
             Route::get('', 'ProjectController@projects');
-            Route::get('/{project}/show', 'ProjectController@project');          
-            Route::get('/{project}/show', 'ProjectController@project');
-            Route::post('/{project}/edit', 'ProjectController@edit');
+            Route::get('/{project}/show', 'ProjectController@project');    
         });
         Route::group(['prefix' => 'tasks'], function () {
             Route::get('', 'TaskController@tasks');

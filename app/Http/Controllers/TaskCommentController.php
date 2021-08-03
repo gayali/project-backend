@@ -7,15 +7,22 @@ use Illuminate\Http\Request;
 use App\Http\Requests\TaskCommentRequest;
 use App\Models\TaskComment;
 use App\Enums\ResponseStatus;
+use App\Helpers\NotificationMessage;
+use App\Notifications\UpdateToSlack;
 use Exception;
-
+use Illuminate\Support\Facades\Notification;
 
 class TaskCommentController extends Controller
 {
     public function store(TaskCommentRequest $request)
     {
         try {
-            TaskComment::create($request->all());
+            $taskComment= TaskComment::create($request->all());
+            
+            $message=NotificationMessage::taskCommentCreated($taskComment);
+            Notification::route('slack',env('SLACK_HOOK'))
+                ->notify(new UpdateToSlack($message));
+
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Created'], 200);
         } catch (Exception $e) {
             return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
@@ -25,6 +32,7 @@ class TaskCommentController extends Controller
     {
         try {
             $taskComment = TaskComment::find($request->id());
+            
             if ($taskComment) {
                 return response()->json([
                     'status' => ResponseStatus::SUCCESS,
@@ -75,6 +83,9 @@ class TaskCommentController extends Controller
     {
         try {
             $taskComment->update($request->getPayload());
+            $message=NotificationMessage::taskCommentEdited($taskComment);
+            Notification::route('slack',env('SLACK_HOOK'))
+                ->notify(new UpdateToSlack($message));
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Comment Edited'], 200);
         } catch (Exception $e) {
             return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
@@ -83,6 +94,9 @@ class TaskCommentController extends Controller
     public function destroy(TaskComment $taskComment)
     {
         try {
+            $message=NotificationMessage::taskCommentDeleted($taskComment);
+            Notification::route('slack',env('SLACK_HOOK'))
+                ->notify(new UpdateToSlack($message));
             $taskComment->delete();
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Comment Destroyed'], 200);
         } catch (Exception $e) {

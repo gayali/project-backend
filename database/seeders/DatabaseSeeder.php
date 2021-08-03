@@ -29,31 +29,30 @@ class DatabaseSeeder extends Seeder
     {
         $resources = ['User', 'Project', 'Task', 'TaskComment'];
         $functions = ['create', 'update', 'read', 'delete'];
-        $guards=['web'];
-        foreach ($guards as $guard){
+
             foreach ($resources as $resource) {
                 foreach ($functions as $function) {
-                    Permission::create(['name' => $function . $resource,'guard_name'=>$guard]);
+                    Permission::create(['name' => $function . $resource]);
                 }
             }
-        }
+        
     }
 
     public function createRoles()
     {
      //   Role::create(['name' => RoleName::ADMIN,'guard_name'=>'web'])->givePermissionTo(Permission::all());
-        Role::create(['name' => RoleName::ADMIN,'guard_name'=>'web'])->givePermissionTo(Permission::all());
-      //  Role::create(['name' => RoleName::USER,'guard_name'=>'web'])->givePermissionTo($this->getUserPermissions());
-        Role::create(['name' => RoleName::USER,'guard_name'=>'web'])->givePermissionTo($this->getUserPermissions());
+        Role::create(['name' => RoleName::ADMIN])->givePermissionTo(Permission::all());
+      //  Role::create(['name' => RoleName::USER])->givePermissionTo($this->getUserPermissions());
+        Role::create(['name' => RoleName::USER])->givePermissionTo($this->getUserPermissions());
     }
 
 
     public function assignAdminRoleToUser()
     {
-        $admin=User::firstOrCreate([
+        $admin=User::create([
             'name'=>'Gaurav Gayali',
             'email'=>'cg.36.central@gmail.com',
-            'password'=>Hash::make('Welcome@54321'),
+            'password'=>'Welcome@54321'
         ]);
         $admin->assignRole(RoleName::ADMIN);
         

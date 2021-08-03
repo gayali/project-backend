@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Helpers\NotificationMessage;
 use App\Http\Requests\TaskRequest;
 use App\Models\Task;
 use App\Enums\ResponseStatus;
 use App\Enums\TaskStatus;
 use App\Models\Project;
+use App\Models\TaskComment;
+use App\Notifications\UpdateToSlack;
+use Illuminate\Support\Facades\Notification;
 use Exception;
-use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -17,12 +20,15 @@ class TaskController extends Controller
     {
         try {
             $request=json_decode(json_encode($request->all()),true);
-
+            
             $newTaskNumber=(Task::where('project_id',$request['project_id'])->get()->count())+1;
             $project=Project::find($request['project_id']);
             $request['branch_name']= $project->prefix. strval($newTaskNumber);
             $request['status']=TaskStatus::BACKLOG;
-            Task::create($request);
+            $task=Task::create($request);
+            $message=NotificationMessage::taskCreated($task);
+            Notification::route('slack',env('SLACK_HOOK'))
+                ->notify(new UpdateToSlack($message));
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Created'], 200);
         } catch (Exception $e) {
             return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
@@ -84,6 +90,9 @@ class TaskController extends Controller
     {
         try {
             $task->update($request->all());
+            $message=NotificationMessage::taskEdited($task);
+            Notification::route('slack',env('SLACK_HOOK'))
+                ->notify(new UpdateToSlack($message));
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Edited'], 200);
         } catch (Exception $e) {
             return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
@@ -92,6 +101,10 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         try {
+           TaskComment::where('task_id',$task->id)->delete();
+            $message=NotificationMessage::taskDeleted($task);
+            Notification::route('slack',env('SLACK_HOOK'))
+                ->notify(new UpdateToSlack($message));
             $task->delete();
             return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Destroyed'], 200);
         } catch (Exception $e) {
