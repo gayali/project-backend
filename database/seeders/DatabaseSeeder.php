@@ -40,9 +40,7 @@ class DatabaseSeeder extends Seeder
 
     public function createRoles()
     {
-     //   Role::create(['name' => RoleName::ADMIN,'guard_name'=>'web'])->givePermissionTo(Permission::all());
         Role::create(['name' => RoleName::ADMIN])->givePermissionTo(Permission::all());
-      //  Role::create(['name' => RoleName::USER])->givePermissionTo($this->getUserPermissions());
         Role::create(['name' => RoleName::USER])->givePermissionTo($this->getUserPermissions());
     }
 

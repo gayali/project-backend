@@ -13,6 +13,7 @@ use App\Models\TaskComment;
 use App\Notifications\UpdateToSlack;
 use Illuminate\Support\Facades\Notification;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
@@ -21,9 +22,13 @@ class TaskController extends Controller
         try {
             $request=json_decode(json_encode($request->all()),true);
             
-            $newTaskNumber=(Task::where('project_id',$request['project_id'])->get()->count())+1;
+            $latestTask=Task::where('project_id',$request['project_id'])->orderBy('created_at','desc')->first();
+
+            $latestTaskStringArray=explode("-",$latestTask->branch_name);
+            $newTaskNumber= intval(end($latestTaskStringArray))+1;
+
             $project=Project::find($request['project_id']);
-            $request['branch_name']= $project->prefix. strval($newTaskNumber);
+            $request['branch_name']= $project->prefix.'-'.strval($newTaskNumber);
             $request['status']=TaskStatus::BACKLOG;
             $task=Task::create($request);
             $message=NotificationMessage::taskCreated($task);
