@@ -20,23 +20,26 @@ class TaskController extends Controller
     public function store(TaskRequest $request)
     {
         try {
-            $request=json_decode(json_encode($request->all()),true);
-            
-            $latestTask=Task::where('project_id',$request['project_id'])->orderBy('created_at','desc')->first();
+            $request = json_decode(json_encode($request->all()), true);
 
-            $latestTaskStringArray=explode("-",$latestTask->branch_name);
-            $newTaskNumber= intval(end($latestTaskStringArray))+1;
+            $latestTask = Task::where('project_id', $request['project_id'])->orderBy('created_at', 'desc')->first();
 
-            $project=Project::find($request['project_id']);
-            $request['branch_name']= $project->prefix.'-'.strval($newTaskNumber);
-            $request['status']=TaskStatus::BACKLOG;
-            $task=Task::create($request);
-            $message=NotificationMessage::taskCreated($task);
-            Notification::route('slack',env('SLACK_HOOK'))
-                ->notify(new UpdateToSlack($message));
-            return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Created'], 200);
+            if ($latestTask) {
+                $latestTaskStringArray = explode("-", $latestTask->branch_name);
+                $newTaskNumber = intval(end($latestTaskStringArray)) + 1;
+            } else {
+                $newTaskNumber = 1;
+            }
+
+            $project = Project::find($request['project_id']);
+            $request['branch_name'] = $project->prefix . '-' . strval($newTaskNumber);
+            $request['status'] = TaskStatus::BACKLOG;
+            $task = Task::create($request);
+            $message = NotificationMessage::taskCreated($task);
+            Notification::route('slack', env('SLACK_HOOK'))->notify(new UpdateToSlack($message));
+            return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'Task Created'], 200);
         } catch (Exception $e) {
-            return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
+            return response()->json(['status' => ResponseStatus::ERROR, 'message' => $e->getMessage()], 500);
         }
     }
     public function tasks()
@@ -75,14 +78,13 @@ class TaskController extends Controller
                     'task' => $task,
                     'message' => 'Task Found',
                 ], 200);
-            }else{
+            } else {
                 return response()->json([
                     'status' => ResponseStatus::SUCCESS,
                     'task' => null,
                     'message' => 'Task Not Found',
                 ], 200);
             }
-
         } catch (Exception $e) {
             return response()->json([
                 'status' => ResponseStatus::ERROR,
@@ -91,29 +93,29 @@ class TaskController extends Controller
             ], 500);
         }
     }
-    public function edit(Task $task,TaskRequest $request)
+    public function edit(Task $task, TaskRequest $request)
     {
         try {
             $task->update($request->all());
-            $message=NotificationMessage::taskEdited($task);
-            Notification::route('slack',env('SLACK_HOOK'))
+            $message = NotificationMessage::taskEdited($task);
+            Notification::route('slack', env('SLACK_HOOK'))
                 ->notify(new UpdateToSlack($message));
-            return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Edited'], 200);
+            return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'Task Edited'], 200);
         } catch (Exception $e) {
-            return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
+            return response()->json(['status' => ResponseStatus::ERROR, 'message' => $e->getMessage()], 500);
         }
     }
     public function destroy(Task $task)
     {
         try {
-           TaskComment::where('task_id',$task->id)->delete();
-            $message=NotificationMessage::taskDeleted($task);
-            Notification::route('slack',env('SLACK_HOOK'))
+            TaskComment::where('task_id', $task->id)->delete();
+            $message = NotificationMessage::taskDeleted($task);
+            Notification::route('slack', env('SLACK_HOOK'))
                 ->notify(new UpdateToSlack($message));
             $task->delete();
-            return response()->json(['status'=>ResponseStatus::SUCCESS,'message'=>'Task Destroyed'], 200);
+            return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'Task Destroyed'], 200);
         } catch (Exception $e) {
-            return response()->json(['status'=>ResponseStatus::ERROR,'message'=>$e->getMessage()], 500);
+            return response()->json(['status' => ResponseStatus::ERROR, 'message' => $e->getMessage()], 500);
         }
     }
 }

@@ -18,7 +18,10 @@ class Task extends Model
         'reporter_user_id',
         'assignee_user_id',
         'description',
-        'project_id'
+        'project_id',
+        'start_date',
+        'end_date'
+
     ];
     protected $with = [
         'reporterUser',
