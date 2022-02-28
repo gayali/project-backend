@@ -28,7 +28,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::group(['middleware' => ['role:'.Role::ADMIN]], function () {
         Route::group(['prefix' => 'users'], function () {
             Route::post('', 'UserController@store');
-            
+
             Route::get('/{user}/show', 'UserController@user');
             Route::post('/{user}/edit', 'UserController@edit');
             Route::post('/{user}/destroy', 'UserController@destroy');
@@ -40,11 +40,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         });
         Route::group(['prefix' => 'tasks'], function () {
             Route::post('', 'TaskController@store');
-          
+
             Route::post('/{task}/destroy', 'TaskController@destroy');
         });
         Route::group(['prefix' => 'taskComments'], function () {
             Route::post('/{taskComment}/destroy', 'TaskComment@destroy');
+        });
+        Route::group(['prefix' => 'sprints'], function () {
+            Route::post('', 'SprintController@store');
+            Route::post('/{sprint}/edit', 'SprintController@edit');
+            Route::post('/{sprint}/destroy', 'SprintController@destroy');
         });
     });
 
@@ -56,7 +61,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         });
         Route::group(['prefix' => 'projects'], function () {
             Route::get('', 'ProjectController@projects');
-            Route::get('/{project}/show', 'ProjectController@project');    
+            Route::get('/{project}/show', 'ProjectController@project');
         });
         Route::group(['prefix' => 'tasks'], function () {
             Route::get('', 'TaskController@tasks');
@@ -68,6 +73,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('', 'TaskCommentController@store');
             Route::get('/{taskComment}/show', 'TaskCommentController@taskComment');
             Route::post('/{taskComment}/edit', 'TaskCommentController@edit');
+        });
+        Route::group(['prefix' => 'sprints'], function () {
+            Route::get('', 'SprintController@sprints');
+            Route::post('', 'SprintController@store');
+            Route::get('/{sprint}/show', 'SprintController@sprint');
+
         });
     });
 });

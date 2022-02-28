@@ -98,8 +98,8 @@ class TaskController extends Controller
         try {
             $task->update($request->all());
             $message = NotificationMessage::taskEdited($task);
-            Notification::route('slack', env('SLACK_HOOK'))
-                ->notify(new UpdateToSlack($message));
+            // Notification::route('slack', env('SLACK_HOOK'))
+            //     ->notify(new UpdateToSlack($message));
             return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'Task Edited'], 200);
         } catch (Exception $e) {
             return response()->json(['status' => ResponseStatus::ERROR, 'message' => $e->getMessage()], 500);

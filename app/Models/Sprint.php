@@ -10,8 +10,8 @@ class Sprint extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'is_active'
-
+        'is_active',
+        'project_id'
     ];
     public function project()
     {

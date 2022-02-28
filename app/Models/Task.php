@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Project;
 use App\Models\TaskComment;
 use App\Models\User;
+
 class Task extends Model
 {
     use HasFactory;
@@ -20,13 +21,15 @@ class Task extends Model
         'description',
         'project_id',
         'start_date',
-        'end_date'
+        'end_date',
+        'sprint_id'
 
     ];
     protected $with = [
         'reporterUser',
         'asigneeUser',
-        'project'
+        'project',
+        'sprint'
     ];
 
     public function project()
@@ -44,5 +47,9 @@ class Task extends Model
     public function asigneeUser()
     {
         return $this->belongsTo(User::class, 'assignee_user_id', 'id');
+    }
+    public function sprint()
+    {
+        return $this->belongsTo(Sprint::class, 'sprint_id', 'id');
     }
 }
