@@ -7,6 +7,7 @@ use App\Helpers\NotificationMessage;
 use App\Helpers\ProjectHelper;
 use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
+use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\TaskComment;
 use App\Notifications\UpdateToSlack;
@@ -23,7 +24,7 @@ class ProjectController extends Controller
             $request->request->add(['prefix' =>  $prefix]);
             $project=Project::create( $request->all());
 
-            
+
             $message=NotificationMessage::projectCreated($project);
             Notification::route('slack',env('SLACK_HOOK'))
                 ->notify(new UpdateToSlack($message));
@@ -80,7 +81,9 @@ class ProjectController extends Controller
                 TaskComment::where('task_id',$task->id)->delete();
             }
 
+
             Task::where('project_id',$project->id)->delete();
+            Sprint::where('project_id',$project->id)->delete();
             $message=NotificationMessage::projectDeleted($project);
             Notification::route('slack',env('SLACK_HOOK'))
                 ->notify(new UpdateToSlack($message));

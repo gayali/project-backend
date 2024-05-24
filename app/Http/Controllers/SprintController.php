@@ -7,6 +7,7 @@ use App\Enums\ResponseStatus;
 use App\Enums\Role;
 use App\Http\Requests\SprintRequest;
 use App\Models\Sprint;
+use App\Models\Task;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -79,6 +80,29 @@ class SprintController extends Controller
             ], 500);
         }
     }
+    public function activate(Sprint $sprint)
+    {
+        try {
+            if (!Auth::user()->hasRole(Role::ADMIN)) {
+                return response()->json(['status' => ResponseStatus::ERROR, 'message' => 'Invalid Access'], 401);
+            }
+
+            Sprint::where('project_id', $sprint->project_id)
+            ->update([
+                'is_active'=>false
+            ]);
+
+            Sprint::where('id',  $sprint->id)
+            ->update([
+                'is_active'=>true
+            ]);
+
+            return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'Sprint Edited'], 200);
+
+        } catch (Exception $e) {
+            return response()->json(['status' => ResponseStatus::ERROR, 'message' => $e->getMessage()], 500);
+        }
+    }
     public function edit(Sprint $sprint, SprintRequest $request)
     {
         try {
@@ -98,6 +122,9 @@ class SprintController extends Controller
         try {
 
             if (Auth::user()->hasRole(Role::ADMIN)) {
+                Task::where('sprint_id',$sprint->id)->update([
+                    'sprint_id'=>null
+                ]);
                 $sprint->delete();
                 return response()->json(['status' => ResponseStatus::SUCCESS, 'message' => 'Sprint Destroyed'], 200);
             } else {

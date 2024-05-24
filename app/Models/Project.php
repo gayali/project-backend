@@ -15,9 +15,24 @@ class Project extends Model
         'prefix'
     ];
 
+    protected $appends = [
+        'current_sprint'
+    ];
 
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    public function sprints()
+    {
+        return $this->hasMany(Sprint::class);
+    }
+
+    public function getCurrentSprintAttribute()
+    {
+        return $this->sprints->first( function ($sprint){
+            return $sprint->is_active === 1;
+        });
     }
 }

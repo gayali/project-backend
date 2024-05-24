@@ -47,7 +47,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('/{taskComment}/destroy', 'TaskComment@destroy');
         });
         Route::group(['prefix' => 'sprints'], function () {
+
             Route::post('', 'SprintController@store');
+            Route::post('/{sprint}/activate', 'SprintController@activate');
             Route::post('/{sprint}/edit', 'SprintController@edit');
             Route::post('/{sprint}/destroy', 'SprintController@destroy');
         });
@@ -65,6 +67,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         });
         Route::group(['prefix' => 'tasks'], function () {
             Route::get('', 'TaskController@tasks');
+            Route::get('/{taskBranchName}/one', 'TaskController@oneTask');
             Route::get('/{task}/show', 'TaskController@task');
             Route::post('/{task}/edit', 'TaskController@edit');
         });
@@ -73,6 +76,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
             Route::post('', 'TaskCommentController@store');
             Route::get('/{taskComment}/show', 'TaskCommentController@taskComment');
             Route::post('/{taskComment}/edit', 'TaskCommentController@edit');
+
         });
         Route::group(['prefix' => 'sprints'], function () {
             Route::get('', 'SprintController@sprints');

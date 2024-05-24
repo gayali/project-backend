@@ -93,6 +93,22 @@ class TaskController extends Controller
             ], 500);
         }
     }
+    public function oneTask(Task $task)
+    {
+        try {
+            return response()->json([
+                'status' => ResponseStatus::SUCCESS,
+                'task' => $task,
+                'message' => '',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => ResponseStatus::ERROR,
+                'user' => null,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
     public function edit(Task $task, TaskRequest $request)
     {
         try {

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Task;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -43,6 +44,10 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('project', \App\Models\Project::class);
         Route::model('task', \App\Models\Task::class);
         Route::model('taskComment', \App\Models\TaskComment::class);
+
+        Route::bind('taskBranchName', function (string $value) {
+            return Task::where('branch_name', $value)->firstOrFail();
+        });
     }
 
     /**

@@ -8,6 +8,7 @@ use App\Http\Requests\TaskCommentRequest;
 use App\Models\TaskComment;
 use App\Enums\ResponseStatus;
 use App\Helpers\NotificationMessage;
+use App\Models\Task;
 use App\Notifications\UpdateToSlack;
 use Exception;
 use Illuminate\Support\Facades\Notification;
@@ -17,8 +18,12 @@ class TaskCommentController extends Controller
     public function store(TaskCommentRequest $request)
     {
         try {
+            $taskId=Task::where('branch_name',$request->task_branch_name)->first()->id;
+
+            $request->request->add(['task_id' =>  $taskId]);
+
             $taskComment= TaskComment::create($request->all());
-            
+
             $message=NotificationMessage::taskCommentCreated($taskComment);
             Notification::route('slack',env('SLACK_HOOK'))
                 ->notify(new UpdateToSlack($message));
@@ -32,7 +37,7 @@ class TaskCommentController extends Controller
     {
         try {
             $taskComment = TaskComment::find($request->id());
-            
+
             if ($taskComment) {
                 return response()->json([
                     'status' => ResponseStatus::SUCCESS,

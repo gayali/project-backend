@@ -26,7 +26,7 @@ class TaskCommentRequest extends FormRequest
         return [
             'comment' => 'required|string',
             'commented_by_user_id' => 'required',
-            'task_id' => 'required'
+            'task_branch_name' => 'required'
         ];
     }
     public function messages()
@@ -34,7 +34,7 @@ class TaskCommentRequest extends FormRequest
         return [
             'comment.required' => 'You need to specify a comment',
             'commented_by_user_id.required' => 'You need to specify a commented by user id',
-            'task_id.required' => 'You need to specify a task id'
+            'task_branch_name.required' => 'You need to specify a task id'
         ];
     }
 }
