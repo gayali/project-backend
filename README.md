@@ -1,62 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Project Management System - Backend
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![Project Management System Backend](https://img.shields.io/badge/Version-1.0.0-blue.svg)
+![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
 
-## About Laravel
+## Table of Contents
+- [About the Project](#about-the-project)
+- [Features](#features)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [API Documentation](#api-documentation)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## About the Project
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+This is the **Backend** for the **Project Management System** built using Node.js and Express.js. The backend serves as the API layer for the frontend application, providing endpoints for managing projects, tasks, and users. It also handles authentication, authorization, and data storage.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Features
 
-## Learning Laravel
+- **RESTful API:** Provides endpoints for managing projects, tasks, and users.
+- **Authentication & Authorization:** Secure user authentication and role-based access control.
+- **Database Integration:** Connects to a database for persistent storage of projects, tasks, and user data.
+- **Error Handling & Logging:** Centralized error handling and logging for easy debugging and monitoring.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+To get started with the backend project locally, follow these steps:
 
-## Laravel Sponsors
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/gayali/project-backend.git
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+2. **Navigate to the project directory:**
+   ```bash
+   cd project-backend
 
-### Premium Partners
+3. **Install dependencies:**
+   ```bash
+   composer install
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+## Configuration
 
-## Contributing
+Before running the backend server, you need to configure your environment variables. Follow these steps:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Copy the `.env.example` file:**
 
-## Code of Conduct
+   In the root directory of the project, you’ll find a file named `.env.example`. Copy this file and rename the copy to `.env`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   cp .env.example .env
 
-## Security Vulnerabilities
+2.  **Update the `.env` file:**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    Open the newly created `.env` file and update the following environment variables with your database details:
 
-## License
+    dotenv
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    Copy code
+
+    `DB_CONNECTION=mysql
+
+    DB_HOST=127.0.0.1
+
+    DB_PORT=3306
+
+    DB_DATABASE=projects_backend
+
+    DB_USERNAME=root
+
+    DB_PASSWORD=`
+
+    -   **DB_CONNECTION:** The database driver, set to `mysql` for MySQL databases.
+
+    -   **DB_HOST:** The hostname where your database is hosted (typically `127.0.0.1` for local development).
+
+    -   **DB_PORT:** The port on which your database is running (default is `3306` for MySQL).
+
+    -   **DB_DATABASE:** The name of your database (e.g., `projects_backend`).
+
+    -   **DB_USERNAME:** Your database username (e.g., `root`).
+
+    -   **DB_PASSWORD:** Your database password (leave empty if none).
+
+Ensure that the `.env` file is correctly configured before starting the server.
+
+
+API Documentation
+-----------------
+
+The backend provides a RESTful API with the following endpoints:
+
+-   **Authentication**
+
+    -   `POST /api/auth/register` - Register a new user
+    -   `POST /api/auth/login` - Login a user
+-   **Projects**
+
+    -   `GET /api/projects` - Get all projects
+    -   `POST /api/projects` - Create a new project
+    -   `PUT /api/projects/:id` - Update a project
+    -   `DELETE /api/projects/:id` - Delete a project
+-   **Tasks**
+
+    -   `GET /api/projects/:projectId/tasks` - Get all tasks for a project
+    -   `POST /api/projects/:projectId/tasks` - Create a new task
+    -   `PUT /api/projects/:projectId/tasks/:taskId` - Update a task
+    -   `DELETE /api/projects/:projectId/tasks/:taskId` - Delete a task
+-   **Users**
+
+    -   `GET /api/users` - Get all users
+    -   `GET /api/users/:id` - Get a specific user
+    -   `PUT /api/users/:id` - Update a user
+    -   `DELETE /api/users/:id` - Delete a user
