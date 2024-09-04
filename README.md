@@ -1,8 +1,7 @@
 # Project Management System - Backend
 
 ![Project Management System Backend](https://img.shields.io/badge/Version-1.0.0-blue.svg)
-![Node.js](https://img.shields.io/badge/Built%20with-Node.js-68a063.svg)
-![Express.js](https://img.shields.io/badge/Built%20with-Express.js-000000.svg)
+![Laravel](https://img.shields.io/badge/laravel-%23FF2D20.svg?style=for-the-badge&logo=laravel&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green.svg)
 
 ## Table of Contents
@@ -11,9 +10,6 @@
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [API Documentation](#api-documentation)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
 
 ## About the Project
 
